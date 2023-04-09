@@ -14,9 +14,9 @@ public class EventQueue : IEventQueue
 		_blockingCollection = new BlockingCollection<object>(_queue);
 	}
 
-	public void Enqueue(object message)
+	public void Enqueue(object @event)
 	{
-		_blockingCollection.Add(message);
+		_blockingCollection.Add(@event);
 	}
 
 	public object DequeueOrWait(CancellationToken cancellationToken)

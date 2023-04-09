@@ -22,7 +22,7 @@ public static class Program
 	private static void SendAndReceiveEvents(IHost host)
 	{
 		IEventPublisher eventPublisher = host.Services.GetRequiredService<IEventPublisher>();
-		eventPublisher.Publish(new SomeEvent() { Text = "Some message" });
+		eventPublisher.Publish(new SomeEvent() { Text = "Some event" });
 		Console.WriteLine("Press any key to quit");
 		Console.ReadKey();
 	}

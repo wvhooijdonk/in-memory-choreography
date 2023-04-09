@@ -23,35 +23,39 @@ public class EventDispatcherService : BackgroundService
 
 		while (!cancellationToken.IsCancellationRequested)
 		{
-			object message = _queue.DequeueOrWait(cancellationToken);
-
-			Type messageType = message.GetType();
-			Type messageListenerType = typeof(IEventListener<>).MakeGenericType(messageType);
-
-			using (var scope = _serviceProvider.CreateScope())
-			{
-				IEnumerable<object> messageListeners = GetMessageListenersByType(messageListenerType);
-				MethodInfo method = messageListenerType.GetMethod(_methodName);
-				if (method == null) {
-					throw new Exception($"Method {_methodName} not found on type {messageListenerType.FullName}");
-				}
-
-				List<Task> tasks = new List<Task>();
-				foreach (var messageListener in messageListeners)
-				{
-					Task task = (Task)method.Invoke(messageListener, new object?[] { message })!;
-					tasks.Add(task);
-				}
-
-				await Task.WhenAll(tasks.ToArray());
-			}
-
+			object @event = _queue.DequeueOrWait(cancellationToken);
+			await DispatchEventToListeners(@event);
 		}
 	}
 
-	private List<object> GetMessageListenersByType(Type messageListenerType)
+	private async Task DispatchEventToListeners(object @event)
 	{
-		return _serviceProvider.GetServices(messageListenerType)
+		Type eventType = @event.GetType();
+		Type eventListenerType = typeof(IEventListener<>).MakeGenericType(eventType);
+
+		using (IServiceScope scope = _serviceProvider.CreateScope())
+		{
+			IEnumerable<object> eventListeners = GetEventListenersByType(scope.ServiceProvider, eventListenerType);
+			MethodInfo method = eventListenerType.GetMethod(_methodName);
+			if (method == null)
+			{
+				throw new Exception($"Method {_methodName} not found on type {eventListenerType.FullName}");
+			}
+
+			List<Task> tasks = new List<Task>();
+			foreach (var eventListener in eventListeners)
+			{
+				Task task = (Task)method.Invoke(eventListener, new object?[] { @event })!;
+				tasks.Add(task);
+			}
+
+			await Task.WhenAll(tasks.ToArray());
+		}
+	}
+
+	private List<object> GetEventListenersByType(IServiceProvider serviceProvider, Type eventListenerType)
+	{
+		return serviceProvider.GetServices(eventListenerType)
 			.Where(l => l != null)
 			.Cast<object>()
 			.ToList();

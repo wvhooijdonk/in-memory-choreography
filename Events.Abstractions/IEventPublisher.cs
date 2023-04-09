@@ -2,5 +2,5 @@
 
 public interface IEventPublisher
 {
-	void Publish(object message);
+	void Publish(object @event);
 }

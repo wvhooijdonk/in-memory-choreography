@@ -11,9 +11,9 @@ public class EventPublisher : IEventPublisher
 		_queue = queue;
 	}
 
-	public void Publish(object message)
+	public void Publish(object @event)
 	{
-		Console.WriteLine("Publishing message");
-		_queue.Enqueue(message);
+		Console.WriteLine("Publishing event");
+		_queue.Enqueue(@event);
 	}
 }
