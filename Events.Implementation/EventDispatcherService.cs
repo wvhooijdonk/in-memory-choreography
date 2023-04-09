@@ -1,13 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Events.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-namespace InMemoryMessaging;
+namespace Events.Implementation;
 
 public class EventDispatcherService : BackgroundService
 {
 	private readonly IEventQueue _queue;
 	private readonly IServiceProvider _serviceProvider;
+	private const string _methodName = "HandleEvent";
+
 	public EventDispatcherService(IServiceProvider serviceProvider, IEventQueue queue)
 	{
 		_serviceProvider = serviceProvider;
@@ -28,13 +31,19 @@ public class EventDispatcherService : BackgroundService
 			using (var scope = _serviceProvider.CreateScope())
 			{
 				IEnumerable<object> messageListeners = GetMessageListenersByType(messageListenerType);
-				MethodInfo method = messageListenerType.GetMethod("ReceiveMessage");
-				//MethodInfo genericMethod = method.MakeGenericMethod(messageType);
+				MethodInfo method = messageListenerType.GetMethod(_methodName);
+				if (method == null) {
+					throw new Exception($"Method {_methodName} not found on type {messageListenerType.FullName}");
+				}
 
+				List<Task> tasks = new List<Task>();
 				foreach (var messageListener in messageListeners)
 				{
-					method.Invoke(messageListener, new object?[] { message });
+					Task task = (Task)method.Invoke(messageListener, new object?[] { message })!;
+					tasks.Add(task);
 				}
+
+				await Task.WhenAll(tasks.ToArray());
 			}
 
 		}

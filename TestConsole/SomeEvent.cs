@@ -1,6 +1,6 @@
 ﻿namespace InMemoryMessaging;
 
-public class SomeMessage
+public class SomeEvent
 {
 	public string Text { get; set; }
 }

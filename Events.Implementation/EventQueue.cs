@@ -1,6 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using Events.Abstractions;
+using System.Collections.Concurrent;
 
-namespace InMemoryMessaging;
+namespace Events.Implementation;
 
 public class EventQueue : IEventQueue
 {

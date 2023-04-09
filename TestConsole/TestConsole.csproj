@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lib\Lib.csproj" />
+    <ProjectReference Include="..\Events.Abstractions\Events.Abstractions.csproj" />
+    <ProjectReference Include="..\Events.Implementation\Events.Implementation.csproj" />
   </ItemGroup>
 
 </Project>

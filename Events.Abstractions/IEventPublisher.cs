@@ -1,4 +1,4 @@
-﻿namespace InMemoryMessaging;
+﻿namespace Events.Abstractions;
 
 public interface IEventPublisher
 {
