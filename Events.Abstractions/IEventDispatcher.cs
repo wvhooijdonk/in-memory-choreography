@@ -1,4 +1,4 @@
-﻿namespace Events.Implementation
+﻿namespace Events.Abstractions
 {
 	public interface IEventDispatcher
 	{
