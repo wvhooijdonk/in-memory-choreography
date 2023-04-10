@@ -2,7 +2,7 @@
 
 namespace InMemoryMessaging;
 
-public class SomeEventListener1 : IEventListener<SomeEvent>
+public class SomeEventHandler1 : IEventHandler<SomeEvent>
 {
 	public async Task HandleEvent(SomeEvent @event)
 	{

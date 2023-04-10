@@ -1,37 +1,23 @@
 ﻿using Events.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace Events.Implementation;
 
-public class EventDispatcherService : BackgroundService
+public class EventDispatcher : IEventDispatcher
 {
-	private readonly IEventQueue _queue;
 	private readonly IServiceProvider _serviceProvider;
 	private const string _methodName = "HandleEvent";
 
-	public EventDispatcherService(IServiceProvider serviceProvider, IEventQueue queue)
+	public EventDispatcher(IServiceProvider serviceProvider)
 	{
 		_serviceProvider = serviceProvider;
-		_queue = queue;
 	}
 
-	protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-	{
-		await Task.Yield();
-
-		while (!cancellationToken.IsCancellationRequested)
-		{
-			object @event = _queue.DequeueOrWait(cancellationToken);
-			await DispatchEventToListeners(@event);
-		}
-	}
-
-	private async Task DispatchEventToListeners(object @event)
+	public async Task Dispatch(object @event)
 	{
 		Type eventType = @event.GetType();
-		Type eventListenerType = typeof(IEventListener<>).MakeGenericType(eventType);
+		Type eventListenerType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
 		using (IServiceScope scope = _serviceProvider.CreateScope())
 		{

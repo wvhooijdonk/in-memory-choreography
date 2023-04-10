@@ -36,9 +36,10 @@ public static class Program
 			  services.AddSingleton(Console.Out);
 			  services.AddSingleton<IEventQueue, EventQueue>();
 			  services.AddScoped<IEventPublisher, EventPublisher>();
-			  services.AddScoped<IEventListener<SomeEvent>, SomeEventListener1>();
-			  services.AddScoped<IEventListener<SomeEvent>, SomeEventListener2>();
-			  services.AddHostedService<EventDispatcherService>();
+			  services.AddScoped<IEventHandler<SomeEvent>, SomeEventHandler1>();
+			  services.AddScoped<IEventHandler<SomeEvent>, SomeEventHandler2>();
+			  services.AddSingleton<IEventDispatcher, EventDispatcher>();
+			  services.AddHostedService<EventListenerService>();
 		  });
 
 }
