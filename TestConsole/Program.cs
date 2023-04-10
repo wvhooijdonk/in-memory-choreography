@@ -34,6 +34,7 @@ public static class Program
 		  .ConfigureServices((hostContext, services) =>
 		  {
 			  services.AddSingleton(Console.Out);
+			  services.AddLogging();
 			  services.AddSingleton<IEventQueue, EventQueue>();
 			  services.AddScoped<IEventPublisher, EventPublisher>();
 			  services.AddScoped<IEventHandler<SomeEvent>, SomeEventHandler1>();
