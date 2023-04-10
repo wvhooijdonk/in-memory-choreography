@@ -1,7 +1,5 @@
 ﻿using Events.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 namespace Events.Implementation;
 
