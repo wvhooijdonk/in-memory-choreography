@@ -1,13 +1,17 @@
 # In memory choreography
 
-## Goals
+## Goal
+
+Provide a way for classes to publish and listen to events within a project so that coupling is minimised
+
+## Constraints
 
 * an event can be any class
 * classes can publish events by using a publisher
-* a listener can be created to receive a specific event
+* classes can listen to events by using a listener
 * implementation can be replaced by an AMQP implementation
 
-## Limitations
+## Current implementation limitations
 
 * all events are queued in a single queue
-* limited to the 'fanout exchange' behaviour
+* limited to 'fanout exchange' behaviour
