@@ -2,5 +2,5 @@
 
 public interface IEventPublisher
 {
-	void Publish(object @event);
+	void Publish(string routingKey, object @event);
 }

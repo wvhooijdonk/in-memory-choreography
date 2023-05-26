@@ -14,7 +14,7 @@ public class EventQueue : IEventQueue
 		_blockingCollection = new BlockingCollection<object>(_queue);
 	}
 
-	public void Enqueue(object @event)
+	public void Enqueue(string routingKey, object @event)
 	{
 		_blockingCollection.Add(@event);
 	}

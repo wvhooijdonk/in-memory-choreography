@@ -22,7 +22,7 @@ public static class Program
 	private static void SendAndReceiveEvents(IHost host)
 	{
 		IEventPublisher eventPublisher = host.Services.GetRequiredService<IEventPublisher>();
-		eventPublisher.Publish(new SomeEvent() { Text = "Some event" });
+		eventPublisher.Publish("routing key", new SomeEvent() { Text = "Some event" });
 		Console.WriteLine("Press any key to quit");
 		Console.ReadKey();
 	}
@@ -35,6 +35,7 @@ public static class Program
 		  {
 			  services.AddSingleton(Console.Out);
 			  services.AddLogging();
+			  services.AddSingleton<IEventExchange, EventExchange>();
 			  services.AddSingleton<IEventQueue, EventQueue>();
 			  services.AddScoped<IEventPublisher, EventPublisher>();
 			  services.AddScoped<IEventHandler<SomeEvent>, SomeEventHandler1>();

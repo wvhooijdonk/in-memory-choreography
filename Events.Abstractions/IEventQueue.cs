@@ -3,5 +3,5 @@
 public interface IEventQueue
 {
 	object DequeueOrWait(CancellationToken cancellationToken);
-	void Enqueue(object @event);
+	void Enqueue(string routingKey, object @event);
 }

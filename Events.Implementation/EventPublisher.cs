@@ -4,16 +4,16 @@ namespace Events.Implementation;
 
 public class EventPublisher : IEventPublisher
 {
-	private readonly IEventQueue _queue;
+	private readonly IEventExchange _exchange;
 
-	public EventPublisher(IEventQueue queue)
+	public EventPublisher(IEventExchange exchange)
 	{
-		_queue = queue;
+		_exchange = exchange;
 	}
 
-	public void Publish(object @event)
+	public void Publish(string routingKey, object @event)
 	{
-		Console.WriteLine("Publishing event");
-		_queue.Enqueue(@event);
+		Console.WriteLine($"Publishing event: {routingKey}");
+        _exchange.Distribute(routingKey, @event);
 	}
 }
